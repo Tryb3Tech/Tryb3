@@ -258,32 +258,36 @@ footer {
 }
 
 /* Footer text */
+footer {
+    background: transparent;
+    color: #1A1A1A;
+    text-align: center;
+    padding: 2rem 2rem 1.5rem;
+    border-top: 1px solid rgba(96, 16, 16, 0.15);
+}
+
 footer p {
     font-size: 0.85rem;
-    font-weight: 400;
     opacity: 0.8;
     margin: 0;
 }
 
-/* Footer links container */
 .footer-links {
     margin-top: 1rem;
 }
 
-/* Footer links */
 .footer-links a {
-    color: #601010 !important;
+    color: #601010;
     text-decoration: none;
     margin: 0 0.8rem;
     font-size: 0.85rem;
-    font-weight: 500;
     opacity: 0.75;
-    transition: opacity 0.3s ease;
 }
 
 .footer-links a:hover {
     opacity: 1;
 }
+
 
 /* WhatsApp Floating Button */
 .whatsapp-float {
