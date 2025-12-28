@@ -235,12 +235,18 @@ nav {
 }
 
 /* Footer */
+
 footer {
-    background-color: #601010; /* Changed from #1A1A1A to Deep Wine */
-    color: #F9F5F3;
+    background-color: transparent;
+    color: #1A1A1A;
     text-align: center;
     padding: 2rem;
-    font-family: 'Source Sans Pro', sans-serif;
+    border-top: 1px solid rgba(96, 16, 16, 0.15);
+}
+
+footer p {
+    font-size: 0.85rem;
+    opacity: 0.8;
 }
 
 footer p {
