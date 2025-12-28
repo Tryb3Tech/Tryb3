@@ -187,107 +187,99 @@ nav {
 }
 
 /* Newsletter */
-.newsletter {
-    background-color: #601010;
-    color: #F9F5F3;
+.newsletter-clean {
+    background-color: transparent !important;
+    color: #1A1A1A;
     padding: 3rem 2rem;
     text-align: center;
 }
 
-.newsletter h2 {
-    font-family: 'Playfair Display', serif;
+.newsletter-clean h2 {
+    font-family: var(--heading-font);
+    color: #601010;
     font-size: 1.8rem;
     margin-bottom: 1rem;
 }
 
-.newsletter p {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
+.newsletter-clean p,
+.newsletter-clean .no-spam {
+    color: #1A1A1A;
     opacity: 0.9;
+    font-family: var(--body-font);
 }
 
-.newsletter-form {
+.newsletter-clean .newsletter-form {
     display: flex;
     gap: 1rem;
     justify-content: center;
     max-width: 400px;
-    margin: 0 auto;
+    margin: 1.5rem auto 0;
     flex-wrap: wrap;
 }
 
-.newsletter-form input {
+.newsletter-clean .newsletter-form input {
     flex: 1;
     min-width: 200px;
     padding: 0.8rem;
-    border: 1px solid rgba(249, 245, 243, 0.3);
+    border: 1px solid rgba(96, 16, 16, 0.1);
     border-radius: 4px;
-    font-family: 'Source Sans Pro', sans-serif;
-    background-color: rgba(249, 245, 243, 0.1);
-    color: #F9F5F3;
+    font-family: var(--body-font);
+    background-color: #ffffff;
+    color: #1A1A1A;
 }
 
-.newsletter-form input::placeholder {
-    color: rgba(249, 245, 243, 0.7);
+.newsletter-clean .newsletter-form input::placeholder {
+    color: rgba(26, 26, 26, 0.5);
 }
 
-.newsletter-form button {
+.newsletter-clean .newsletter-form button {
     padding: 0.8rem 1.5rem;
+    background-color: #601010;
+    color: #ffffff;
+    border: none;
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: var(--body-font);
+    transition: background-color 0.3s ease;
+}
+
+.newsletter-clean .newsletter-form button:hover {
+    background-color: #8A2E2E;
 }
 
 /* Footer */
-
-/* ================================
-   FOOTER RESET & CLEAN STYLE
-   ================================ */
-
-/* Hard reset – kills ANY background bar */
-footer,
-footer *,
-.footer,
-.footer * {
-    background: transparent !important;
-}
-
-/* Footer container */
-footer {
-    color: #1A1A1A !important;
-    text-align: center;
-    padding: 2rem 2rem 1.5rem;
-    margin-top: 3rem;
-    border-top: 1px solid rgba(96, 16, 16, 0.15);
-}
-
-/* Footer text */
-footer {
-    background: transparent;
+.footer-clean {
+    background-color: transparent !important;
     color: #1A1A1A;
     text-align: center;
     padding: 2rem 2rem 1.5rem;
     border-top: 1px solid rgba(96, 16, 16, 0.15);
 }
 
-footer p {
+.footer-clean p {
     font-size: 0.85rem;
     opacity: 0.8;
     margin: 0;
+    font-family: var(--body-font);
 }
 
-.footer-links {
+.footer-clean .footer-links {
     margin-top: 1rem;
 }
 
-.footer-links a {
+.footer-clean .footer-links a {
     color: #601010;
     text-decoration: none;
     margin: 0 0.8rem;
     font-size: 0.85rem;
     opacity: 0.75;
+    font-family: var(--body-font);
+    transition: opacity 0.3s ease;
 }
 
-.footer-links a:hover {
+.footer-clean .footer-links a:hover {
     opacity: 1;
 }
-
 
 /* WhatsApp Floating Button */
 .whatsapp-float {
