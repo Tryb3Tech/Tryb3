@@ -521,6 +521,11 @@ nav {
     margin: 0 auto;
 }
 
+.contact-pre {
+    display:flex;
+    justify-content: center;
+ }
+    
 .contact-form input,
 .contact-form textarea {
     width: 100%;
