@@ -50,14 +50,18 @@ nav {
   border-bottom: 0.5px solid rgba(107, 26, 42, 0.15);
 }
 
-.nav-logo {
+.logo img {
+  height: 45px;
+  display:block ;
+}
+/*.nav-logo {
   font-size: 22px;
   font-weight: 700;
   letter-spacing: 5px;
   color: var(--burgundy);
   text-decoration: none;
 }
-
+*/
 .nav-links {
   display: flex;
   gap: 40px;
@@ -613,6 +617,70 @@ nav {
   opacity: 0.7;
 }
 
+.form-status {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+/* Overlay */
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  background: rgba(0, 0, 0, 0.5); /* you can darken/lighten this */
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Popup box */
+.popup-content {
+  background: #E8DCC8;
+  padding: 30px 25px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 320px;
+  width: 90%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+}
+
+/* Text */
+.popup-content p {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #333;
+  line-height: 1.5;
+}
+
+/* Button (your brand ivory) */
+.popup-content button {
+  background: none;
+  color: #4A1020;
+  font-family: "Playfair Display", serif;
+  font-style: italic;
+  font-weight: 400;
+  border: 1px solid #6B1A2A;
+  padding: 9px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  transition: all 0.25s ease;
+}
+
+/* Hover */
+.popup-content button:hover {
+  background: #6B1A2A;
+  color: #F0E8D8; /* safer than var(--ivory) unless defined */
+}
+
+.popup-content em {
+  font-style: bold italic;
+  color: var(--burgundy);
+}
+
 .form-input,
 .form-textarea,
 .form-select {
@@ -1006,3 +1074,92 @@ footer {
     display: none;
   }
 }
+
+/* ============================================
+   NAV ADDITIONS — paste at bottom of global.css
+   ============================================ */
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.nav-logo-text {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 5px;
+  color: var(--burgundy);
+  text-decoration: none;
+}
+
+/* Icon buttons (account, cart) */
+.nav-icon {
+  display: flex;
+  align-items: center;
+  position: relative;
+  color: var(--text-mid);
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.nav-icon:hover,
+.nav-icon.active { color: var(--burgundy); }
+
+/* Cart badge */
+.cart-count {
+  position: absolute;
+  top: -7px;
+  right: -9px;
+  background: var(--burgundy);
+  color: var(--ivory);
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: none;           /* shown by JS when > 0 */
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0 3px;
+}
+
+/* Active nav link */
+.nav-links a.active {
+  color: var(--burgundy);
+  font-weight: 600;
+}
+
+/* ── PRODUCT PLACEHOLDER (shop grid) ── */
+.product-placeholder {
+  display: none;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  background: var(--ivory-dark);
+}
+
+.product-placeholder p {
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: var(--burgundy);
+  opacity: 0.35;
+}
+
+/* Shared btn */
+.btn-primary {
+  display: inline-block;
+  font-family: 'Playfair Display', serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  background: var(--burgundy);
+  color: var(--ivory);
+  padding: 16px 40px;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: background 0.25s;
+}
+.btn-primary:hover { background: var(--burgundy-deep); }

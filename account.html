@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Account — Tryb3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut, updatePassword, EmailAuthProvider, reauthenticateWithCredential }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+    import { getFirestore, doc, getDoc, updateDoc, collection, query, where, getDocs }
+      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    /* ── Same Firebase config as login.html ── */
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    const firebaseConfig = {
+          apiKey: "AIzaSyBmqbaUw1WgZ1BGa_AK-EyrqbTHde6e3To",
+          authDomain: "tryb3website.firebaseapp.com",
+          projectId: "tryb3website",
+          storageBucket: "tryb3website.firebasestorage.app",
+          messagingSenderId: "197458140763",
+          appId: "1:197458140763:web:731cf78237b888c98be97e",
+          measurementId: "G-4ZDJEB79NP"
+};
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = 'login.html';
+        return;
+      }
+
+      // Show account UI
+      document.getElementById('authGate').style.display = 'none';
+      document.getElementById('accountUI').style.display = 'block';
+      document.getElementById('accountEmail').textContent = user.email;
+
+      // Load profile
+      const snap = await getDoc(doc(db, 'customers', user.uid));
+      if (snap.exists()) {
+        const data = snap.data();
+        document.getElementById('profileName').value  = data.name  || '';
+        document.getElementById('profilePhone').value = data.phone || '';
+        document.getElementById('profileAddr').value  = data.address || '';
+        document.getElementById('accountName').textContent = data.name || 'There';
+      }
+
+      // Load orders from localStorage (offline) or Firestore
+      renderOrders(user.uid);
+
+      // Save profile
+      document.getElementById('profileForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const btn = document.getElementById('saveProfileBtn');
+        btn.textContent = 'Saving…'; btn.disabled = true;
+        await updateDoc(doc(db, 'customers', user.uid), {
+          name:    document.getElementById('profileName').value,
+          phone:   document.getElementById('profilePhone').value,
+          address: document.getElementById('profileAddr').value,
+        });
+        btn.textContent = 'SAVED ✓'; btn.disabled = false;
+        setTimeout(() => { btn.textContent = 'SAVE CHANGES'; }, 2000);
+      });
+    });
+
+    async function renderOrders(uid) {
+      // Try localStorage orders first (guest + logged in)
+      const localOrders = JSON.parse(localStorage.getItem('tryb3_orders')) || [];
+      const list = document.getElementById('ordersList');
+      const empty = document.getElementById('ordersEmpty');
+
+      if (localOrders.length === 0) {
+        empty.style.display = 'block';
+        return;
+      }
+
+      empty.style.display = 'none';
+      list.innerHTML = '';
+      [...localOrders].reverse().forEach(order => {
+        const date = new Date(order.date).toLocaleDateString('en-NG', { year:'numeric', month:'long', day:'numeric' });
+        const itemNames = order.items.map(i => `${i.name} ×${i.qty}`).join(', ');
+        list.innerHTML += `
+          <div class="order-card">
+            <div class="order-header">
+              <div>
+                <div class="order-ref">${order.ref}</div>
+                <div class="order-date">${date}</div>
+              </div>
+              <div class="order-total">${formatNGN(order.total)}</div>
+            </div>
+            <div class="order-items-list">${itemNames}</div>
+            <div class="order-footer">
+              <span class="order-status">In progress</span>
+              <a href="index.html#custom" class="reorder-btn">REORDER SIMILAR</a>
+            </div>
+          </div>`;
+      });
+    }
+
+    window.signOutUser = async function() {
+      await signOut(auth);
+      window.location.href = 'index.html';
+    };
+
+    window.showSection = function(id) {
+      document.querySelectorAll('.account-section').forEach(s => s.classList.remove('active'));
+      document.querySelectorAll('.account-nav-item').forEach(n => n.classList.remove('active'));
+      document.getElementById('section-' + id).classList.add('active');
+      document.querySelector(`[data-section="${id}"]`).classList.add('active');
+    };
+
+    function formatNGN(n) { return '₦' + Number(n).toLocaleString('en-NG'); }
+  </script>
+  <style>
+    .account-page { padding-top: 72px; }
+
+    /* Auth gate (shown while checking login state) */
+    #authGate {
+      min-height: 60vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-mid);
+    }
+
+    #accountUI { display: none; }
+
+    /* ── ACCOUNT HEADER ── */
+    .account-header {
+      background: var(--burgundy);
+      padding: 48px 80px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .account-greeting {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: rgba(240,232,216,0.5);
+      margin-bottom: 10px;
+    }
+
+    .account-header h1 {
+      font-size: clamp(28px,4vw,48px);
+      font-weight: 700;
+      color: var(--ivory);
+    }
+
+    .account-header h1 em { font-style: italic; color: var(--ivory-dark); }
+
+    .account-header-right {
+      text-align: right;
+    }
+
+    .account-email-display {
+      font-size: 12px;
+      font-style: italic;
+      color: rgba(240,232,216,0.5);
+      margin-bottom: 12px;
+    }
+
+    .signout-btn {
+      font-family: 'Playfair Display', serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: rgba(240,232,216,0.6);
+      background: none;
+      border: 0.5px solid rgba(240,232,216,0.3);
+      padding: 8px 18px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .signout-btn:hover { color: var(--ivory); border-color: var(--ivory); }
+
+    /* ── LAYOUT ── */
+    .account-body {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      min-height: 70vh;
+      background: var(--ivory-warm);
+    }
+
+    /* ── SIDEBAR ── */
+    .account-nav {
+      background: var(--ivory-dark);
+      padding: 48px 0;
+      border-right: 0.5px solid rgba(107,26,42,0.1);
+    }
+
+    .account-nav-item {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      color: var(--text-mid);
+      padding: 16px 32px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 2px solid transparent;
+      background: none;
+      border-top: none;
+      border-right: none;
+      border-bottom: none;
+      width: 100%;
+      text-align: left;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .account-nav-item:hover { color: var(--burgundy); }
+
+    .account-nav-item.active {
+      color: var(--burgundy);
+      border-left-color: var(--burgundy);
+      font-weight: 600;
+      background: rgba(107,26,42,0.04);
+    }
+
+    /* ── SECTIONS ── */
+    .account-content {
+      padding: 56px 80px 80px;
+    }
+
+    .account-section { display: none; }
+    .account-section.active { display: block; }
+
+    .section-heading {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--burgundy);
+      margin-bottom: 32px;
+      padding-bottom: 14px;
+      border-bottom: 0.5px solid rgba(107,26,42,0.12);
+    }
+
+    /* Orders */
+    .order-card {
+      background: var(--ivory-dark);
+      padding: 28px;
+      margin-bottom: 16px;
+    }
+
+    .order-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .order-ref {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-dark);
+      letter-spacing: 1px;
+    }
+
+    .order-date {
+      font-size: 11px;
+      font-style: italic;
+      color: var(--text-mid);
+      margin-top: 3px;
+    }
+
+    .order-total {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--burgundy);
+    }
+
+    .order-items-list {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--text-mid);
+      margin-bottom: 18px;
+      line-height: 1.7;
+    }
+
+    .order-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .order-status {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--burgundy);
+      background: rgba(107,26,42,0.08);
+      padding: 5px 12px;
+    }
+
+    .reorder-btn {
+      font-size: 10px;
+      letter-spacing: 2px;
+      color: var(--burgundy);
+      text-decoration: none;
+      border-bottom: 0.5px solid var(--burgundy);
+      opacity: 0.7;
+      transition: opacity 0.2s;
+    }
+    .reorder-btn:hover { opacity: 1; }
+
+    .orders-empty {
+      display: none;
+      padding: 60px 0;
+      text-align: center;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-mid);
+      opacity: 0.6;
+    }
+
+    /* Profile form */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 20px;
+      max-width: 480px;
+    }
+
+    .form-label {
+      font-size: 9px;
+      letter-spacing: 2.5px;
+      color: var(--burgundy);
+      opacity: 0.7;
+    }
+
+    .form-input {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px;
+      color: var(--text-dark);
+      background: var(--ivory-warm);
+      border: 0.5px solid rgba(107,26,42,0.25);
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    .form-input:focus { border-color: var(--burgundy); }
+    .form-input[readonly] { opacity: 0.5; cursor: default; }
+
+    .save-btn {
+      font-family: 'Playfair Display', serif;
+      font-size: 11px;
+      letter-spacing: 3px;
+      background: var(--burgundy);
+      color: var(--ivory);
+      border: none;
+      padding: 16px 36px;
+      cursor: pointer;
+      transition: background 0.25s;
+      margin-top: 8px;
+    }
+    .save-btn:hover { background: var(--burgundy-deep); }
+    .save-btn:disabled { opacity: 0.6; cursor: default; }
+
+    /* Reviews */
+    .review-prompt {
+      background: var(--ivory-dark);
+      padding: 40px;
+      text-align: center;
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-mid);
+      line-height: 1.8;
+    }
+
+    .review-prompt a {
+      color: var(--burgundy);
+      text-decoration: none;
+      border-bottom: 0.5px solid var(--burgundy);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .account-header { padding: 40px 24px 32px; flex-direction: column; align-items: flex-start; gap: 20px; }
+      .account-body { grid-template-columns: 1fr; }
+      .account-nav { display: flex; overflow-x: auto; padding: 0; border-right: none; border-bottom: 0.5px solid rgba(107,26,42,0.1); }
+      .account-nav-item { border-left: none; border-bottom: 2px solid transparent; padding: 16px 20px; white-space: nowrap; }
+      .account-nav-item.active { border-bottom-color: var(--burgundy); border-left: none; }
+      .account-content { padding: 32px 24px 64px; }
+    }
+  </style>
+</head>
+<body class="account-page">
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">
+      <a href="index.html"><img src="images/logo.png" alt="Tryb3" onerror="this.style.display='none';"></a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="shop.html">Shop</a></li>
+      <li><a href="index.html#custom">Custom Orders</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="cart.html" class="nav-icon nav-cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </a>
+    </div>
+  </nav>
+
+  <!-- AUTH GATE (loading state) -->
+  <div id="authGate">Loading your account…</div>
+
+  <!-- ACCOUNT UI -->
+  <div id="accountUI">
+
+    <div class="account-header">
+      <div>
+        <div class="account-greeting">WELCOME BACK</div>
+        <h1>Hello, <em id="accountName">there.</em></h1>
+      </div>
+      <div class="account-header-right">
+        <div class="account-email-display" id="accountEmail"></div>
+        <button class="signout-btn" onclick="signOutUser()">SIGN OUT</button>
+      </div>
+    </div>
+
+    <div class="account-body">
+      <!-- Sidebar nav -->
+      <nav class="account-nav">
+        <button class="account-nav-item active" data-section="orders" onclick="showSection('orders')">MY ORDERS</button>
+        <button class="account-nav-item" data-section="profile" onclick="showSection('profile')">MY DETAILS</button>
+        <button class="account-nav-item" data-section="reviews" onclick="showSection('reviews')">MY REVIEWS</button>
+      </nav>
+
+      <!-- Content -->
+      <div class="account-content">
+
+        <!-- Orders -->
+        <div class="account-section active" id="section-orders">
+          <div class="section-heading">ORDER HISTORY</div>
+          <div id="ordersList"></div>
+          <div class="orders-empty" id="ordersEmpty">
+            You haven't placed any orders yet.<br/>
+            <a href="shop.html" style="color:var(--burgundy);">Browse the collection →</a>
+          </div>
+        </div>
+
+        <!-- Profile -->
+        <div class="account-section" id="section-profile">
+          <div class="section-heading">MY DETAILS</div>
+          <form id="profileForm">
+            <div class="form-group">
+              <label class="form-label">FULL NAME</label>
+              <input class="form-input" type="text" id="profileName" placeholder="Ada Obi"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">EMAIL ADDRESS</label>
+              <input class="form-input" type="email" id="profileEmail" readonly/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">PHONE NUMBER</label>
+              <input class="form-input" type="tel" id="profilePhone" placeholder="+234 801 234 5678"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">DEFAULT SHIPPING ADDRESS</label>
+              <input class="form-input" type="text" id="profileAddr" placeholder="12 Adeola Odeku, VI, Lagos"/>
+            </div>
+            <button class="save-btn" type="submit" id="saveProfileBtn">SAVE CHANGES</button>
+          </form>
+        </div>
+
+        <!-- Reviews -->
+        <div class="account-section" id="section-reviews">
+          <div class="section-heading">MY REVIEWS</div>
+          <div class="review-prompt">
+            Reviews are sent directly via WhatsApp so we can feature them on the site.<br/><br/>
+            <a href="https://wa.me/message/NMQJ64C3XHWUH1" target="_blank">Leave a review on WhatsApp →</a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div><!-- /accountUI -->
+
+  <script src="scripts/cart.js"></script>
+</body>
+</html>

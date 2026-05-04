@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop — Tryb3</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="styles/global.css"/>
+  <style>
+    /* ── SHOP PAGE SPECIFIC ── */
+    .shop-page { padding-top: 72px; }
+
+    .shop-hero {
+      background: var(--burgundy);
+      padding: 64px 80px 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .shop-hero h1 {
+      font-size: clamp(36px, 5vw, 64px);
+      font-weight: 700;
+      color: var(--ivory);
+      line-height: 1.05;
+    }
+
+    .shop-hero h1 em { font-style: italic; color: var(--ivory-dark); }
+
+    .shop-hero-right {
+      text-align: right;
+    }
+
+    .shop-hero-tag {
+      font-size: 12px;
+      font-style: italic;
+      color: rgba(240,232,216,0.5);
+      letter-spacing: 1px;
+    }
+
+    /* ── FILTER BAR ── */
+    .filter-bar {
+      background: var(--ivory-dark);
+      padding: 0 80px;
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border-bottom: 0.5px solid rgba(107,26,42,0.12);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .filter-btn {
+      font-family: 'Playfair Display', serif;
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      color: var(--text-mid);
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      padding: 20px 24px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover { color: var(--burgundy); }
+
+    .filter-btn.active {
+      color: var(--burgundy);
+      border-bottom-color: var(--burgundy);
+      font-weight: 600;
+    }
+
+    /* ── RESULTS BAR ── */
+    .results-bar {
+      padding: 20px 80px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--ivory-warm);
+    }
+
+    .results-count {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--text-mid);
+      opacity: 0.7;
+    }
+
+    .sort-select {
+      font-family: 'Playfair Display', serif;
+      font-size: 11px;
+      letter-spacing: 1.5px;
+      color: var(--text-mid);
+      background: none;
+      border: 0.5px solid rgba(107,26,42,0.2);
+      padding: 8px 16px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    /* ── PRODUCTS GRID ── */
+    .shop-grid-section {
+      padding: 40px 80px 100px;
+      background: var(--ivory-warm);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .product-card {
+      cursor: pointer;
+      position: relative;
+    }
+
+    .product-card[data-hidden="true"] { display: none; }
+
+    .product-image {
+      aspect-ratio: 3/4;
+      background: var(--ivory-dark);
+      margin-bottom: 18px;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .product-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.5s ease;
+    }
+
+    .product-card:hover .product-image img { transform: scale(1.04); }
+
+    .product-placeholder-text {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: var(--burgundy);
+      opacity: 0.3;
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 14px; left: 14px;
+      background: var(--burgundy);
+      color: var(--ivory);
+      font-size: 9px;
+      letter-spacing: 2px;
+      padding: 5px 11px;
+      z-index: 1;
+    }
+
+    .badge-sold { background: var(--text-dark); }
+
+    /* Quick-add overlay */
+    .quick-add {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      background: var(--burgundy);
+      color: var(--ivory);
+      font-family: 'Playfair Display', serif;
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      border: none;
+      padding: 14px;
+      cursor: pointer;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      width: 100%;
+    }
+
+    .product-card:hover .quick-add { transform: translateY(0); }
+    .quick-add:hover { background: var(--burgundy-deep); }
+    .quick-add:disabled { background: var(--text-mid); cursor: default; }
+
+    .product-meta { padding: 0 2px; }
+
+    .product-name {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 4px;
+    }
+
+    .product-desc {
+      font-size: 12px;
+      font-style: italic;
+      color: var(--text-mid);
+      margin-bottom: 10px;
+    }
+
+    .product-price {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--burgundy);
+    }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 80px 0;
+      display: none;
+    }
+
+    .empty-state-icon { font-size: 48px; opacity: 0.25; margin-bottom: 20px; }
+    .empty-state p {
+      font-size: 14px;
+      font-style: italic;
+      color: var(--text-mid);
+      opacity: 0.6;
+    }
+
+    .footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-copy {
+  font-size: 11px;
+  letter-spacing: 1px;
+  color: rgba(240, 232, 216, 0.25);
+}
+
+.footer-social {
+  display: flex;
+  gap: 24px;
+}
+
+    /* ── CART TOAST ── */
+    .cart-toast {
+      position: fixed;
+      bottom: 32px; right: 32px;
+      background: var(--text-dark);
+      color: var(--ivory);
+      font-family: 'Playfair Display', serif;
+      font-size: 13px;
+      font-style: italic;
+      padding: 16px 28px;
+      z-index: 200;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: all 0.35s ease;
+      pointer-events: none;
+      max-width: 320px;
+    }
+
+    .cart-toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .shop-hero, .filter-bar, .results-bar, .shop-grid-section { padding-left: 24px; padding-right: 24px; }
+      .products-grid { grid-template-columns: 1fr 1fr; gap: 20px; }
+    }
+
+    @media (max-width: 520px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .shop-hero { flex-direction: column; align-items: flex-start; gap: 16px; }
+    }
+  </style>
+</head>
+<body class="shop-page">
+
+  <!-- NAV -->
+  <nav>
+    <div class="logo">
+      <a href="index.html"><img src="images/logo.png" alt="Tryb3" onerror="this.style.display='none'; this.parentElement.insertAdjacentHTML('afterbegin', '<span class=\'nav-logo-text\'>TRYB3</span>');"></a>
+    </div>
+    <ul class="nav-links">
+      <li><a href="index.html#about">Our Story</a></li>
+      <li><a href="shop.html" class="active">Shop</a></li>
+      <li><a href="index.html#custom">Custom Orders</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+    <div class="nav-right">
+      <a href="account.html" class="nav-icon" title="Account">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+      </a>
+      <a href="cart.html" class="nav-icon nav-cart" title="Cart">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+      </a>
+      <a href="index.html#custom" class="nav-cta">ORDER NOW</a>
+    </div>
+  </nav>
+
+  <!-- SHOP HERO -->
+  <section class="shop-hero">
+    <div>
+      <h1>The<br/><em>Collection</em></h1>
+    </div>
+    <div class="shop-hero-right">
+      <p class="shop-hero-tag">Handmade · Just for you</p>
+    </div>
+  </section>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-btn active" data-filter="all">ALL PIECES</button>
+    <button class="filter-btn" data-filter="bags">BAGS & TOTES</button>
+    <button class="filter-btn" data-filter="beanies">BEANIES</button>
+    <button class="filter-btn" data-filter="accessories">ACCESSORIES</button>
+    <button class="filter-btn" data-filter="tops">TOPS & CLOTHING</button>
+    <button class="filter-btn" data-filter="custom">CUSTOM PIECES</button>
+  </div>
+
+  <!-- RESULTS BAR -->
+  <div class="results-bar">
+    <span class="results-count" id="resultsCount">Showing all pieces</span>
+    <select class="sort-select" id="sortSelect">
+      <option value="default">SORT BY</option>
+      <option value="price-asc">PRICE: LOW TO HIGH</option>
+      <option value="price-desc">PRICE: HIGH TO LOW</option>
+      <option value="newest">NEWEST FIRST</option>
+    </select>
+  </div>
+
+  <!-- GRID -->
+  <section class="shop-grid-section">
+    <div class="products-grid" id="productsGrid">
+
+      <!-- PRODUCT 1: TG Bag -->
+      <div class="product-card" data-category="bags" data-price="35000" data-date="3">
+        <div class="product-image">
+          <span class="product-badge">NEW</span>
+          <img src="images/Bags.jpg" alt="TG Bag"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"/>
+          <span class="product-placeholder-text" style="display:none;">TG Bag</span>
+          <button class="quick-add"
+                  data-id="tg-bag"
+                  data-name="TG Bag"
+                  data-price="35000"
+                  data-img="images/Bags.jpg">
+            + ADD TO CART
+          </button>
+        </div>
+        <div class="product-meta">
+          <div class="product-name">TG Bag</div>
+          <div class="product-desc">Open weave, structured base</div>
+          <div class="product-price">₦35,000</div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 2: Generic -->
+      <div class="product-card" data-category="accessories" data-price="28000" data-date="2">
+        <div class="product-image">
+          <span class="product-badge">NEW</span>
+          <img src="images/General.jpeg" alt="Generic piece"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"/>
+          <span class="product-placeholder-text" style="display:none;">Generic</span>
+          <button class="quick-add"
+                  data-id="generic-1"
+                  data-name="Generic"
+                  data-price="28000"
+                  data-img="images/General.jpeg">
+            + ADD TO CART
+          </button>
+        </div>
+        <div class="product-meta">
+          <div class="product-name">Generic</div>
+          <div class="product-desc">To be updated</div>
+          <div class="product-price">₦28,000</div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 3: Dialo beanies -->
+      <div class="product-card" data-category="beanies" data-price="18000" data-date="1">
+        <div class="product-image">
+          <img src="images/Yello.jpeg" alt="Dialo Beanie"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"/>
+          <span class="product-placeholder-text" style="display:none;">Dialo Beanie</span>
+          <button class="quick-add"
+                  data-id="dialo-beanie"
+                  data-name="Dialo Beanie"
+                  data-price="18000"
+                  data-img="images/Yello.jpeg">
+            + ADD TO CART
+          </button>
+        </div>
+        <div class="product-meta">
+          <div class="product-name">Dialo Beanie</div>
+          <div class="product-desc">To be updated</div>
+          <div class="product-price">₦18,000</div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 4: Multi-me -->
+      <div class="product-card" data-category="beanies" data-price="27000" data-date="4">
+        <div class="product-image">
+          <span class="product-badge">POPULAR</span>
+          <img src="images/Multi-me.jpeg" alt="Multi-me Beanie"
+               onerror="this.style.display='none'; this.nextElementSibling.style.display='block';"/>
+          <span class="product-placeholder-text" style="display:none;">Multi-me</span>
+          <button class="quick-add"
+                  data-id="multi-me"
+                  data-name="Multi-me"
+                  data-price="27000"
+                  data-img="images/Multi-me.jpeg">
+            + ADD TO CART
+          </button>
+        </div>
+        <div class="product-meta">
+          <div class="product-name">Multi-me</div>
+          <div class="product-desc">To be updated</div>
+          <div class="product-price">₦27,000</div>
+        </div>
+      </div>
+
+      <!-- EMPTY STATE (shown when filter returns 0 results) -->
+      <div class="empty-state" id="emptyState">
+        <div class="empty-state-icon">🧶</div>
+        <p>No pieces in this category yet.<br/>Check back soon - we're always making something.</p>
+      </div>
+
+    </div><!-- /products-grid -->
+  </section>
+
+  <!-- CART TOAST -->
+  <div class="cart-toast" id="cartToast"></div>
+
+  <!-- FOOTER (condensed) -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">TRYB3</div>
+        <p class="footer-brand-tag">Handmade, just for you.<br/>Every stitch placed with intention.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">EXPLORE</div>
+        <ul class="footer-links">
+          <li><a href="#about">Our Story</a></li>
+          <li><a href="#shop">Shop</a></li>
+          <li><a href="#custom">Custom Orders</a></li>
+        </ul>
+      </div>
+      <div>
+        <div>
+        <div class="footer-col-title">LEGAL</div>
+        <ul class="footer-links">
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+      </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 Tryb3. All rights reserved.</span>
+      <div class="footer-social">
+        <a href="https://www.instagram.com/tryb3.co" target="_blank">INSTAGRAM</a>
+        <a href="https://www.tiktok.com/@tryb3.co" target="_blank">TIKTOK</a>
+        <a href="https://wa.me/message/NMQJ64C3XHWUH1" target="_blank">WHATSAPP</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="scripts/cart.js"></script>
+  <script>
+    // ── FILTER ──
+    const filterBtns = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('.product-card[data-category]');
+    const emptyState = document.getElementById('emptyState');
+    const resultsCount = document.getElementById('resultsCount');
+    let activeFilter = 'all';
+
+    function applyFilter(filter) {
+      activeFilter = filter;
+      let visible = 0;
+      cards.forEach(card => {
+        const match = filter === 'all' || card.dataset.category === filter;
+        card.dataset.hidden = match ? 'false' : 'true';
+        card.style.display = match ? '' : 'none';
+        if (match) visible++;
+      });
+      emptyState.style.display = visible === 0 ? 'block' : 'none';
+      resultsCount.textContent = filter === 'all'
+        ? `Showing all pieces`
+        : `Showing ${visible} piece${visible !== 1 ? 's' : ''} in ${filter}`;
+    }
+
+    filterBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterBtns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        applyFilter(btn.dataset.filter);
+      });
+    });
+
+    // ── SORT ──
+    document.getElementById('sortSelect').addEventListener('change', function() {
+      const grid = document.getElementById('productsGrid');
+      const visibleCards = [...cards].filter(c => c.style.display !== 'none');
+      visibleCards.sort((a, b) => {
+        if (this.value === 'price-asc') return +a.dataset.price - +b.dataset.price;
+        if (this.value === 'price-desc') return +b.dataset.price - +a.dataset.price;
+        if (this.value === 'newest') return +b.dataset.date - +a.dataset.date;
+        return 0;
+      });
+      visibleCards.forEach(c => grid.appendChild(c));
+      grid.appendChild(emptyState);
+    });
+
+    // ── QUICK ADD ──
+    const toast = document.getElementById('cartToast');
+
+    document.querySelectorAll('.quick-add').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const { id, name, price, img } = btn.dataset;
+        addToCart({ id, name, price: +price, img });
+
+        toast.textContent = `"${name}" added to cart ✓`;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2800);
+      });
+    });
+
+    // Init cart count on load
+    updateCartCount();
+  </script>
+</body>
+</html>
