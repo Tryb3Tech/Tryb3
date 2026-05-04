@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Tryb3 — Handmade, Just for You</title>
+   <link rel="stylesheet" href="styles/global.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet"/>
+ 
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+
+      <div class="logo">
+        <a  href="index.html"><img src="/images/logo.png" alt="Logo"></a>
+      </div>
+
+    <ul class="nav-links">
+      <li><a href="#about">Our Story</a></li>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#custom">Custom Orders</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+    <a href="#custom" class="nav-cta">ORDER NOW</a>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">HANDMADE CROCHET · EST. 2024</p>
+      <h1 class="hero-title">Made<br/>with<br/><em>intention.</em></h1>
+      <div class="hero-divider"></div>
+      <p class="hero-tagline">Handmade, just for you.</p>
+      <div>
+        <a href="#shop" class="hero-btn">SHOP NOW</a>
+        <a href="#custom" class="hero-btn-outline">CUSTOM ORDER</a>
+      </div>
+    </div>
+    <div class="hero-right">
+      <!-- Decorative crochet granny square motif -->
+      <div class="crochet-art">
+        <svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" fill="none">
+          <!-- Outer square -->
+          <rect x="16" y="16" width="288" height="288" rx="4" stroke="#6B1A2A" stroke-width="1"/>
+          <!-- Inner square -->
+          <rect x="40" y="40" width="240" height="240" rx="2" stroke="#6B1A2A" stroke-width="0.5" opacity="0.4"/>
+          <!-- Granny square petals -->
+          <g transform="translate(160,160)">
+            <!-- Ring 1 - center -->
+            <circle r="16" fill="#6B1A2A" opacity="0.15"/>
+            <circle r="8" fill="#6B1A2A" opacity="0.5"/>
+            <!-- Ring 2 - petals -->
+            <ellipse ry="28" rx="10" fill="#6B1A2A" opacity="0.12"/>
+            <ellipse ry="28" rx="10" transform="rotate(45)" fill="#6B1A2A" opacity="0.12"/>
+            <ellipse ry="28" rx="10" transform="rotate(90)" fill="#6B1A2A" opacity="0.12"/>
+            <ellipse ry="28" rx="10" transform="rotate(135)" fill="#6B1A2A" opacity="0.12"/>
+            <!-- Ring 3 -->
+            <circle r="36" stroke="#6B1A2A" stroke-width="0.8" opacity="0.25"/>
+            <!-- Corner clusters -->
+            <circle cx="60" cy="60" r="10" fill="#6B1A2A" opacity="0.1"/>
+            <circle cx="-60" cy="60" r="10" fill="#6B1A2A" opacity="0.1"/>
+            <circle cx="60" cy="-60" r="10" fill="#6B1A2A" opacity="0.1"/>
+            <circle cx="-60" cy="-60" r="10" fill="#6B1A2A" opacity="0.1"/>
+            <!-- Corner connecting arcs -->
+            <path d="M36 0 Q48 48 0 36" stroke="#6B1A2A" stroke-width="0.8" opacity="0.3"/>
+            <path d="M0 36 Q-48 48 -36 0" stroke="#6B1A2A" stroke-width="0.8" opacity="0.3"/>
+            <path d="M-36 0 Q-48 -48 0 -36" stroke="#6B1A2A" stroke-width="0.8" opacity="0.3"/>
+            <path d="M0 -36 Q48 -48 36 0" stroke="#6B1A2A" stroke-width="0.8" opacity="0.3"/>
+          </g>
+          <!-- Corner details -->
+          <circle cx="56" cy="56" r="6" fill="#6B1A2A" opacity="0.15"/>
+          <circle cx="264" cy="56" r="6" fill="#6B1A2A" opacity="0.15"/>
+          <circle cx="56" cy="264" r="6" fill="#6B1A2A" opacity="0.15"/>
+          <circle cx="264" cy="264" r="6" fill="#6B1A2A" opacity="0.15"/>
+          <!-- Brand text in center -->
+          <text x="160" y="252" text-anchor="middle" font-family="'Playfair Display', serif" font-size="14" fill="#6B1A2A" opacity="0.4" letter-spacing="4">TRYB3</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+
+  <!-- MARQUEE -->
+  <div class="marquee-strip" aria-hidden="true">
+    <div class="marquee-inner">
+      <span>HANDMADE</span><span class="dot">·</span>
+      <span>JUST FOR YOU</span><span class="dot">·</span>
+      <span>CROCHET PIECES</span><span class="dot">·</span>
+      <span>MADE WITH LOVE</span><span class="dot">·</span>
+      <span>CUSTOM ORDERS</span><span class="dot">·</span>
+      <span>ONE OF A KIND</span><span class="dot">·</span>
+      <span>TRYB3</span><span class="dot">·</span>
+      <span>HANDMADE</span><span class="dot">·</span>
+      <span>JUST FOR YOU</span><span class="dot">·</span>
+      <span>CROCHET PIECES</span><span class="dot">·</span>
+      <span>MADE WITH LOVE</span><span class="dot">·</span>
+      <span>CUSTOM ORDERS</span><span class="dot">·</span>
+      <span>ONE OF A KIND</span><span class="dot">·</span>
+      <span>TRYB3</span><span class="dot">·</span>
+    </div>
+  </div>
+
+  <!-- ABOUT -->
+  <section class="about" id="about">
+    <div class="about-image">
+      <div class="about-placeholder">
+        <div class="about-placeholder-icon">🧶</div>
+        <p>YOUR PHOTO HERE</p>
+      </div>
+    </div>
+    <div class="about-content">
+      <p class="section-label">OUR STORY</p>
+      <h2 class="section-title">Every stitch<br/>tells <em>your story.</em></h2>
+      <p class="section-text">
+        Tryb3 was born from a belief that the things we carry, wear, and gift should feel truly personal — not mass-produced, but made with deliberate care for the person who'll hold them.
+      </p>
+      <p class="section-text">
+        Each piece is crocheted by hand, to order. No two are exactly alike. That's the point.
+      </p>
+      <div class="about-stats">
+        <div>
+          <div class="stat-number">100%</div>
+          <div class="stat-label">HANDMADE</div>
+        </div>
+        <div>
+          <div class="stat-number">0</div>
+          <div class="stat-label">MASS PRODUCED</div>
+        </div>
+        <div>
+          <div class="stat-number">∞</div>
+          <div class="stat-label">CUSTOM OPTIONS</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESS -->
+  <section class="process">
+    <div class="process-header">
+      <h2 class="process-title">How it<br/><em>comes together</em></h2>
+      <p class="process-subtitle">From your idea to your hands — a simple, personal process.</p>
+    </div>
+    <div class="process-steps">
+      <div class="process-step">
+        <div class="step-number">01</div>
+        <div class="step-title">You reach out</div>
+        <p class="step-desc">Tell us what you're dreaming of — a bag, a top, a gift, a surprise. Nothing is too specific.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">02</div>
+        <div class="step-title">We talk details</div>
+        <p class="step-desc">Colors, sizing, style references. We make sure we understand exactly what you want before we begin.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">03</div>
+        <div class="step-title">We get to work</div>
+        <p class="step-desc">Every piece is crocheted by hand. We'll keep you updated throughout the process.</p>
+      </div>
+      <div class="process-step">
+        <div class="step-number">04</div>
+        <div class="step-title">Delivered to you</div>
+        <p class="step-desc">Packaged with care and sent your way — wrapped like the gift it is.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SHOP -->
+  <section class="shop" id="shop">
+    <div class="shop-header">
+      <div>
+        <p class="section-label">FEATURED PIECES</p>
+        <h2 class="section-title">The <em>collection</em></h2>
+      </div>
+      <a href="#shop" class="shop-link">VIEW ALL</a>
+    </div>
+    <div class="products-grid">
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-badge">NEW</div>
+        </div>
+        <div class="product-name">Market Tote</div>
+        <div class="product-desc">Open weave, structured base</div>
+        <div class="product-price">From ₦18,000</div>
+      </div>
+      <div class="product-card">
+        <div class="product-image"></div>
+        <div class="product-name">Mini Shoulder Bag</div>
+        <div class="product-desc">Granny square front panel</div>
+        <div class="product-price">From ₦14,500</div>
+      </div>
+      <div class="product-card">
+        <div class="product-image">
+          <div class="product-badge">POPULAR</div>
+        </div>
+        <div class="product-name">Bucket Hat</div>
+        <div class="product-desc">Cotton yarn, fully lined</div>
+        <div class="product-price">From ₦9,000</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CUSTOM ORDER -->
+  <section class="custom" id="custom">
+    <div class="custom-text">
+      <p class="section-label">CUSTOM ORDERS</p>
+      <h2 class="section-title">Made <em>for you,</em><br/>specifically.</h2>
+      <p class="section-text">Have something in mind? We love bringing ideas to life. Custom pieces are our favourite thing to make.</p>
+      <ul class="custom-list">
+        <li>Any color, any size, any style</li>
+        <li>Gift orders with personal notes included</li>
+        <li>Turnaround time discussed before you commit</li>
+        <li>Designed together, made with care</li>
+      </ul>
+    </div>
+    <div class="custom-form" id="contact">
+      <div class="form-group">
+        <label class="form-label">YOUR NAME</label>
+        <input class="form-input" type="text" placeholder="What should we call you?"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">EMAIL</label>
+        <input class="form-input" type="email" placeholder="your@email.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">WHAT ARE YOU LOOKING FOR?</label>
+        <select class="form-select form-input">
+          <option value="">Select a category</option>
+          <option>Bag / Tote</option>
+          <option>Clothing / Tops</option>
+          <option>Accessories</option>
+          <option>Home Décor</option>
+          <option>Gift / Surprise</option>
+          <option>Something else</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">TELL US MORE</label>
+        <textarea class="form-textarea" placeholder="Colors, size, who it's for, any inspiration..."></textarea>
+      </div>
+      <button class="form-submit">SEND REQUEST</button>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="testimonials-header">
+      <p class="section-label" style="text-align:center;">KIND WORDS</p>
+      <h2 class="section-title">What <em>people say</em></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">The bag arrived and I cried. It was exactly what I described but somehow even better than I imagined. I'll be ordering again.</p>
+        <div class="testimonial-author">— ADAEZE O.</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">I got a custom tote as a birthday gift for my sister. The quality is stunning — she takes it everywhere. The packaging alone felt special.</p>
+        <div class="testimonial-author">— FOLAKE B.</div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-quote">"</div>
+        <p class="testimonial-text">Fast turnaround, constant updates, and the final piece was perfect. This is the kind of business you want to support.</p>
+        <div class="testimonial-author">— CHINWE M.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- NEWSLETTER -->
+  <section class="newsletter">
+    <p class="newsletter-label">STAY CONNECTED</p>
+    <h2 class="newsletter-title">Be the first to<br/><em>know everything.</em></h2>
+    <p class="newsletter-sub">New pieces, restocks, behind-the-scenes. No spam — just good things.</p>
+    <div class="newsletter-form">
+      <input class="newsletter-input" type="email" placeholder="your@email.com"/>
+      <button class="newsletter-btn">SUBSCRIBE</button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-name">TRYB3</div>
+        <p class="footer-brand-tag">Handmade, just for you.<br/>Every stitch placed with intention.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">EXPLORE</div>
+        <ul class="footer-links">
+          <li><a href="#about">Our Story</a></li>
+          <li><a href="#shop">Shop</a></li>
+          <li><a href="#custom">Custom Orders</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">CONNECT</div>
+        <ul class="footer-links">
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">TikTok</a></li>
+          <li><a href="#">WhatsApp</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">LEGAL</div>
+        <ul class="footer-links">
+          <li><a href="#">Shipping Policy</a></li>
+          <li><a href="#">Returns</a></li>
+          <li><a href="#">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span class="footer-copy">© 2025 Tryb3. All rights reserved.</span>
+      <div class="footer-social">
+        <a href="#">INSTAGRAM</a>
+        <a href="#">TIKTOK</a>
+        <a href="#">WHATSAPP</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
