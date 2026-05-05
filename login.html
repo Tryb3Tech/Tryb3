@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="styles/global.css"/>
   <!-- Firebase SDK (replace config below with your own from Firebase Console) -->
   <script type="module">
+    console.log("Login script loaded");
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, sendPasswordResetEmail }
       from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
@@ -58,22 +59,33 @@ console.log("Firebase is connected");
     }
 
     // ── LOGIN ──
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('loginForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const email    = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value;
-        const btn      = document.getElementById('loginBtn');
-        btn.disabled = true; btn.textContent = 'Signing in…';
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-          window.location.href = 'account.html';
-        } catch (err) {
-          setMessage(friendlyError(err.code));
-          btn.disabled = false; btn.textContent = 'SIGN IN';
-        }
-      });
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+
+  const btn = document.getElementById('loginBtn');
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+
+  // ✅ ADD THIS VALIDATION
+  if (!email || !password) {
+    setMessage('Please enter both email and password.');
+    btn.disabled = false;
+    btn.textContent = 'SIGN IN';
+    return;
+  }
+
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    window.location.href = 'account.html';
+  } catch (err) {
+    setMessage(friendlyError(err.code));
+    btn.disabled = false;
+    btn.textContent = 'SIGN IN';
+  }
+});
 
       // ── SIGN UP ──
       document.getElementById('signupForm').addEventListener('submit', async (e) => {

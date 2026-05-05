@@ -674,6 +674,9 @@
 
   <script src="scripts/cart.js"></script>
   <script>
+     import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    
+     const db = getFirestore(app);
     /* ── Replace with your actual Paystack PUBLIC key ── */
     const PAYSTACK_PUBLIC_KEY = 'pk_live_fd3e5f9e2db97f69459d797e955c99eef6adf84b';
 
@@ -786,7 +789,7 @@ if (activeTab === 'transfer') {
         btn.textContent = 'PLACE ORDER & PAY';
       } else {
         // Bank transfer — save order, show success
-        saveOrderLocally('bank-transfer');
+        await saveOrderToFirestore('bank-transfer');
         showSuccess();
       }
     });
@@ -808,11 +811,11 @@ if (activeTab === 'transfer') {
             { display_name: 'Address', variable_name: 'address', value: document.getElementById('address').value + ', ' + document.getElementById('city').value }
           ]
         },
-        callback: function(response) {
-          // Payment successful
-          saveOrderLocally('paystack', response.reference);
-          showSuccess();
-        },
+        callback: async function(response) {
+  await saveOrderToFirestore('paystack', response.reference);
+  showSuccess();
+},
+
         onClose: function() {
           const btn = document.getElementById('placeOrderBtn');
           btn.disabled = false;
@@ -822,29 +825,43 @@ if (activeTab === 'transfer') {
       handler.openIframe();
     }
 
-    function saveOrderLocally(method, ref) {
-      const order = {
-        ref: ref || 'TRANSFER-' + Date.now(),
-        method,
-        date: new Date().toISOString(),
-        customer: {
-          name: document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value,
-          email: document.getElementById('email').value,
-          phone: document.getElementById('phone').value,
-          address: document.getElementById('address').value + ', ' + document.getElementById('city').value + ', ' + document.getElementById('state').value,
-        },
-        items: getCart(),
-        subtotal: cartTotal(),
-        shipping: shippingCost,
-        total: cartTotal() + shippingCost,
-      };
-      let orders = JSON.parse(localStorage.getItem('tryb3_orders')) || [];
-      orders.push(order);
-      localStorage.setItem('tryb3_orders', JSON.stringify(orders));
+    async function saveOrderToFirestore(method, ref = null) {
+  const order = {
+    userId: null, // we’ll improve later with Firebase Auth user.uid
+    ref: ref || 'ORDER-' + Date.now(),
+    paymentMethod: method,
+    status: method === 'paystack' ? 'paid' : 'pending',
+    
+    customer: {
+      name: document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value,
+      email: document.getElementById('email').value,
+      phone: document.getElementById('phone').value,
+      address: document.getElementById('address').value + ', ' +
+               document.getElementById('city').value + ', ' +
+               document.getElementById('state').value,
+    },
 
-      // Clear cart after successful order
-      localStorage.removeItem('tryb3_cart');
-    }
+    items: getCart(),
+    subtotal: cartTotal(),
+    shipping: shippingCost,
+    total: cartTotal() + shippingCost,
+
+    createdAt: new Date().toISOString()
+  };
+
+  try {
+    const docRef = await addDoc(collection(db, "orders"), order);
+
+    console.log("Order saved with ID:", docRef.id);
+
+    // clear cart after successful save
+    localStorage.removeItem('tryb3_cart');
+
+  } catch (err) {
+    console.error("Order save failed:", err);
+    alert("Order failed to save. Try again.");
+  }
+}
 
     function showSuccess() {
       document.getElementById('checkoutBody').style.display = 'none';
